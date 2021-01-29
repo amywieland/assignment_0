@@ -14,20 +14,25 @@ int main (int argc, char *argv[]){
       // int fps = atoi(argv[2]);
      int j = 3;
      while (j<argc){
-       table[atoi(argv[j])][atoi(argv[j+1])] = atoi(argv[j+2]);
+       //preventing sink at center
+       if(atoi(argv[j]) != 12 && atoi(argv[j+1]) != 12 && atoi(argv[j+2]) != -1){ 
+	 table[atoi(argv[j])][atoi(argv[j+1])] = atoi(argv[j+2]);
+       }
        j+=3;
      }
     }
     
     int i = 1;
     while (i<argc){
-      table[atoi(argv[i])][atoi(argv[i+1])] = atoi(argv[i+2]);
+      //preventing sink at center
+      if(atoi(argv[j]) != 12 && atoi(argv[j+1]) != 12 && atoi(argv[j+2]) != -1){
+	table[atoi(argv[i])][atoi(argv[i+1])] = atoi(argv[i+2]);
+      }
       i+=3;
     }
   }
  
   //setting bounds of the table = to -1
-  
   int j;
   for (j = 0; j < ARRAY_SIZE; j++){
     table[j][0] = -1;

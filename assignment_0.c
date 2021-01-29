@@ -72,6 +72,8 @@ void simulate(int table[ARRAY_SIZE][ARRAY_SIZE]){
 
   while (topple){
     topple = false;
+    j=0;
+    i=0;
   for (j = 0; j < ARRAY_SIZE; j++){
     tableprint(table);
     for (i = 0; i < ARRAY_SIZE; i++){

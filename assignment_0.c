@@ -2,67 +2,71 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
-#define ARRAY_SIZE 25
+#include <unistd.h>
+#define ARRAY_SIZE 23
 void simulate(int table[ARRAY_SIZE][ARRAY_SIZE]);
 void tableprint(int table[ARRAY_SIZE][ARRAY_SIZE]);
 
 int main (int argc, char *argv[]){
   int table[ARRAY_SIZE][ARRAY_SIZE] = {0};
-
+  int fps;
+  
   if(argc > 1){
     if(!strcmp("--fps", argv[1])){
-      // int fps = atoi(argv[2]);
+     fps = atoi(argv[2]);
      int j = 3;
      while (j<argc){
        //preventing sink at center
-       if(atoi(argv[j]) != 12 && atoi(argv[j+1]) != 12 && atoi(argv[j+2]) != -1){ 
-	 table[atoi(argv[j])][atoi(argv[j+1])] = atoi(argv[j+2]);
+       if(atoi(argv[j]) == 11 && atoi(argv[j+1]) == 11 && atoi(argv[j+2]) == -1){
+	j+=3;
        }
-       j+=3;
+       else{
+	table[atoi(argv[j])][atoi(argv[j+1])] = atoi(argv[j+2]);
+	tableprint(table);
+	j+=3;
+       }
      }
     }
-    
+
+    fps = 1;
     int i = 1;
     while (i<argc){
       //preventing sink at center
-      if(atoi(argv[j]) != 12 && atoi(argv[j+1]) != 12 && atoi(argv[j+2]) != -1){
-	table[atoi(argv[i])][atoi(argv[i+1])] = atoi(argv[i+2]);
+      if(atoi(argv[i]) == 11 && atoi(argv[i+1]) == 11 && atoi(argv[i+2]) == -1){
+	i+=3;
       }
-      i+=3;
+      else{
+	table[atoi(argv[i])][atoi(argv[i+1])] = atoi(argv[i+2]);
+	tableprint(table);
+	i+=3;
+      }
     }
   }
- 
-  //setting bounds of the table = to -1
-  int j;
-  for (j = 0; j < ARRAY_SIZE; j++){
-    table[j][0] = -1;
-    table[j][ARRAY_SIZE] = -1;
-  }
 
-  int i;
-  for (i = 0; j < ARRAY_SIZE; i++){
-    table[0][i] = -1;
-    table[ARRAY_SIZE][i] = -1;
+  while(1){
+    
+    simulate(table);
+    tableprint(table);
+    usleep(1000000/fps);
   }
-
-  simulate(table);
   
   return 0;
 }
 
 void tableprint(int table[ARRAY_SIZE][ARRAY_SIZE]){
   int j, i;
-  for (j = 1; j < ARRAY_SIZE-1 ; j++){
+  for (j = 0; j < ARRAY_SIZE; j++){
     printf("\n");
-    for (i = 1; i < ARRAY_SIZE-1 ; i++){
+    for (i = 0; i < ARRAY_SIZE; i++){
       if (table[j][i] == -1){
 	printf(" #");
       }
       else{
-      printf(" %d",table[j][i]);
+	printf(" %d",table[j][i]);
       }
     }
   }
+  printf("\n");
 }
 
 void simulate(int table[ARRAY_SIZE][ARRAY_SIZE]){
@@ -85,29 +89,29 @@ void simulate(int table[ARRAY_SIZE][ARRAY_SIZE]){
       if (table[j][i] > 8){
 	table[j][i] = 1;
 	topple = true;
-	if (table[j-1][i-1] != -1){
+	if (j-1 > 0 || i-1 > 0 || table[j-1][i-1] != -1){
 	  table[j-1][i-1]++;
 	}
-	if (table[j-1][i+1] != -1){
+	if (j-1 > 0 || i+1 < ARRAY_SIZE || table[j-1][i+1] != -1){
 	  table[j-1][i+1]++;
 	}
-	if (table[j+1][i-1] != -1){
+	if (j+1 < ARRAY_SIZE || i-1 > 0 || table[j+1][i-1] != -1){
 	  table[j+1][i-1]++;
 	}
-	if (table[j+1][i+1] != -1){
+	if (j+1 < ARRAY_SIZE || i+1 < ARRAY_SIZE || table[j+1][i+1] != -1){
 	  table[j+1][i+1]++;
 	}
 	
-	if (table[j-1][i] != -1){
+	if (j-1 > 0 || table[j-1][i] != -1){
 	  table[j-1][i]++;
 	}
-	if (table[j][i-1] != -1){
+	if (i-1 > 0 || table[j][i-1] != -1){
 	  table[j][i-1]++;
 	}
-       	if (table[j][i+1] != -1){
+       	if (i+1 < ARRAY_SIZE || table[j][i+1] != -1){
 	  table[j][i+1]++;
 	}
-	if (table[j+1][i] != -1){
+	if (j+1 < ARRAY_SIZE || table[j+1][i] != -1){
 	  table[j+1][i]++;
 	}
       }
